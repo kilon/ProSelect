@@ -23,7 +23,7 @@ class ProSelectPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_category = "ProSelect"
-    bl_context = "objectmode"
+    #bl_context = "objectmode"
 
     def draw(self, context):
         layout = self.layout
@@ -34,7 +34,7 @@ class ProSelectPanel(bpy.types.Panel):
         col = layout.column(align=True)
 
         row = col.row(align=True)
-        row.operator("object.pro_select")
+        row.operator("view3d.pro_select")
         row = col.row(align=True)
 
         row.prop(scene,"number_of_verts")
@@ -42,14 +42,16 @@ class ProSelectPanel(bpy.types.Panel):
 
 
 class ProSelectOperator(bpy.types.Operator):
-    bl_idname = "object.pro_select"
+    bl_idname = "view3d.pro_select"
     bl_label = "ProSelect"
 
-    
 
     def execute(self, context):
         svert_index = 0
         ob = bpy.context.active_object
+        oldmode = ob.mode
+        if oldmode != 'OBJECT':
+            bpy.ops.object.mode_set(mode='OBJECT') 
         num_of_edges= context.scene.number_of_verts
         trvert = []
         for vert in ob.data.vertices:
@@ -61,7 +63,8 @@ class ProSelectOperator(bpy.types.Operator):
             if count_edges == num_of_edges:
                 trvert.append(vert)
                 vert.select = True
-    
+        if oldmode != 'OBJECT':
+            bpy.ops.object.mode_set(mode=oldmode) 
         return {'FINISHED'}
 
 
