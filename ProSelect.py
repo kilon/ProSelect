@@ -10,28 +10,25 @@ bl_info={
 "wiki_url": "http://www.kilon-alios.com",
 "category": "Object"}
 
-class ProSelectPanel(bpy.types.Panel):
-    """Creates a Panel in the scene context of the properties editor"""
-    bl_label = "ProSelect"
-    bl_idname = "ProSelect_Panel"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'TOOLS'
-    bl_category = "ProSelect"
-    #bl_context = "objectmode"
-
-    def draw(self, context):
-        layout = self.layout
-
-        scene = context.scene
 
 
-        col = layout.column(align=True)
 
-        row = col.row(align=True)
-        row.operator("view3d.pro_select")
-        row = col.row(align=True)
+def pro_select_menu_draw(self, context):
+    layout = self.layout
+    layout.separator()
+    scene = context.scene
 
-        row.prop(scene,"number_of_verts")
+
+    col = layout.column(align=True)
+    
+    row = col.row(align=True)
+    row.label(text="by amount of connected verices")
+    row = col.row(align=True)
+    row.operator("view3d.pro_select",text="Select all")
+    
+    row = col.row(align=True)
+
+    row.prop(scene,"number_of_verts",text="       amount",slider=True)
   
 
 
@@ -65,15 +62,13 @@ class ProSelectOperator(bpy.types.Operator):
 
 def register():
     bpy.utils.register_class(ProSelectOperator)
-    bpy.utils.register_class(ProSelectPanel)
-    
-
+    bpy.types.VIEW3D_MT_edit_mesh_select_similar.append(pro_select_menu_draw)
     bpy.types.Scene.number_of_verts = bpy.props.IntProperty(default=3,soft_min=0,soft_max=100,name="Number of Vertices",description="Number of Vertices connected with edges")
 
 def unregister():
 
     bpy.utils.unregister_class(ProSelectOperator)
-    bpy.utils.unregister_class(ProSelectPanel)
+
     del bpy.types.Scene.number_of_verts
 
 
