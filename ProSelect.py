@@ -1,10 +1,4 @@
 import bpy, bgl, blf, os, importlib, time
-import cyclops.draw, cyclops.initialisation
-from cyclops.morpheas import *
-from cyclops.CyclopsSkinsCoordinates import *
-import logging
-from bpy.app.handlers import persistent
-import pdb
 
 bl_info={
 "name": "ProSelect",
